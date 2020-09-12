@@ -20,6 +20,24 @@ const remap = [
   ["What zip code are you based out of?  ", "zip"],
   ["What's your hauling ability?  ", "hauling"],
   ["What counties are you willing to travel to?  ", "travel_to"],
+  ["Describe how many animals need help (how many, what breed) ", "animals"],
+  [
+    "Do you need transportation or a place to keep the animals?  ",
+    "need_transportation",
+  ],
+  [
+    "Is a person still at the property with the animals?  ",
+    "still_at_property",
+  ],
+  ["Will you be able to stay with the animals on site?  ", "able_to_stay"],
+  [
+    "Phone Number- we will not send resources out without confirming by phone. ",
+    "phone",
+  ],
+  [
+    "Email Address Please include details in Volunteer Notes - from start to finish. Your initials when you start/accept the request along with time you started, updates and key info as you progress, who you've connected for transport, & where they are going/shelter ",
+    "email",
+  ],
 ];
 
 async function getSheet(token, type) {

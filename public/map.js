@@ -97,17 +97,22 @@ fetch("/data.geojson")
 
 const templates = {
   can_help: _.template(`<section><h5>Can help</h5>
-                       <div><label>email</label>: <a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label>: <%= phone %></div>
-                       <div><label>zip code based out of</label>: <%= zip %></div>
-                       <div><label>willing to travel to</label>: <%= travel_to %></div>
-                       <div><label>hauling capacity</label>: <%= hauling %></div></section>`),
+                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
+                       <div><label>phone</label><%= phone %></div>
+                       <div><label>zip code based out of</label><%= zip %></div>
+                       <div><label>willing to travel to</label><%= travel_to %></div>
+                       <div><label>hauling capacity</label><%= hauling %></div></section>`),
   have_room: _.template(`<section><h5>Have room</h5>
-                       <div><label>email</label>: <a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label>: <%= phone %></div></section>`),
+                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
+                       <div><label>phone</label><%= phone %></div></section>`),
   need_help: _.template(`<section><h5 style="color:darkred">Needs help</h5>
-                       <div><label>email</label>: <a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label>: <%= phone %></div></section>`),
+                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
+                       <div><label>phone</label><%= phone %></div>
+                       <div><label>do you need transportation or a place to keep the animals?</label><%= need_transportation %></div>
+                       <div><label>Is a person still at the property with the animals?</label> <%= still_at_property %></div>
+                       <div><label>Will you be able to stay with the animals on site?</label> <%= able_to_stay %></div>
+                       </section>
+                       `),
 };
 
 function showLayer(layer) {
