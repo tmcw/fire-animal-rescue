@@ -11,6 +11,17 @@ const options = {
 };
 const cache = new LRU(options);
 
+const remap = [
+  ["Email Address ", "email"],
+  ["Email Address", "email"],
+  ["Name (first and last) ", "name"],
+  ["Phone Number - we MUST be able to reach you.  ", "phone"],
+  ["Phone Number - we MUST be able to reach you. ", "phone"],
+  ["What zip code are you based out of?  ", "zip"],
+  ["What's your hauling ability?  ", "hauling"],
+  ["What counties are you willing to travel to?  ", "travel_to"],
+];
+
 async function getSheet(token, type) {
   const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
   return fetch(url)
@@ -35,6 +46,14 @@ async function getSheet(token, type) {
             "VOLUNTEER COMMENTS Key info, date, time, intitials"
           ] = undefined;
           feature["VOLUNTEER NOTES "] = undefined;
+
+          for (const [source, target] of remap) {
+            const val = feature[source];
+            if (val !== undefined) {
+              delete feature[source];
+              feature[target] = val;
+            }
+          }
           return {
             type: "Feature",
             properties: {

@@ -8,12 +8,25 @@ body,
 html {
   min-height: 100%;
 }
+* {
+  box-sizing: border-box;
+}
 #map {
   position: absolute;
   top: 50px;
+  right: 350px;
   left: 0;
-  right: 0;
   bottom: 0;
+}
+#sidebar {
+  position: absolute;
+  border-left: 1px solid #000;
+  top: 50px;
+  right: 0;
+  width: 350px;
+  bottom: 0;
+  overflow-y: auto;
+  padding: 25px;
 }
 #header {
   position: absolute;
@@ -44,6 +57,14 @@ html {
   border-radius: 5px;
 }
 
+.marker:hover {
+  border: 2px solid #000;
+}
+
+.marker.alert:hover {
+  border: 2px solid darkred;
+}
+
 .marker > div {
   padding-top: 3px;
   display: flex;
@@ -53,4 +74,22 @@ html {
 
 .marker.alert {
   border: 2px solid red;
+}
+
+section {
+  padding-bottom: 25px;
+  border-bottom: 1px solid #000;
+}
+
+section h5 {
+  margin-bottom: 0;
+}
+
+section div {
+  padding-top: 5px;
+}
+
+section label {
+  font-style: italic;
+  color: #666;
 }
