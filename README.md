@@ -27,3 +27,24 @@ $ npm run start
 ```
 
 Deployment is automatic through Heroku. Just merge a PR to master and it'll update.
+
+
+---
+
+### Production
+
+This runs on a Heroku server. Currently has a hobby Dyno. The main moving piece is
+the server request that loads from google sheets. This has a cache so that not
+every request goes through to google. However, Google could go down or rate limit.
+Unlikely but possible.
+
+More likely is a dramatic change in the spreadsheet. The algorithm tries to be robust,
+matching any column with 'zip' in it as the zip code so that renamings don't affect
+it. But if someone where to rename the zip column to something without zip in the name,
+the dots would disappear. That manifests as a 500 internal error which is visible in
+Heroku metrics, plus people will obviously notice. The fix is tweaking the algorithm to
+match.
+
+It's unlikely that CPU or memory would be a problem: memory usage and dyno load
+are extremely low. Esri might also rate limit access to the wildfire outlines
+that we're loading from the API, but also, probably not.
