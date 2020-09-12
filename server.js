@@ -3,7 +3,7 @@ const fetch = require("node-fetch");
 const usZips = require("us-zips");
 const express = require("express");
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 async function getSheet(token) {
   const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
