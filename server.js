@@ -1,7 +1,7 @@
 const d3 = require("d3");
 const LRU = require("lru-cache");
 const fetch = require("node-fetch");
-const usZips = require("us-zips");
+const zipcodes = require("zipcodes");
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,15 +21,15 @@ async function getSheet(token) {
         type: "FeatureCollection",
         features: parsed
           .map((feature) => {
-            const zip =
-              usZips[
-                feature["What zip code are you based out of?  "] ||
-                  feature[
-                    "What zip code is the place you can house animals? "
-                  ] ||
-                  feature["Zip Code where help is needed "]
-              ];
+            const rawZip =
+              feature["What zip code are you based out of?  "] ||
+              feature["What zip code is the place you can house animals? "] ||
+              feature["Zip Code where help is needed "];
+            const zip = zipcodes.lookup(rawZip.substring(0, 5));
             if (!zip) {
+              if (rawZip) {
+                console.log(rawZip);
+              }
               return;
             }
             feature[

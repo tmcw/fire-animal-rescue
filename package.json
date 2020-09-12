@@ -13,6 +13,6 @@
     "express": "^4.17.1",
     "lru-cache": "^6.0.0",
     "node-fetch": "^2.6.1",
-    "us-zips": "^4.0.2"
+    "zipcodes": "^8.0.0"
   }
 }
