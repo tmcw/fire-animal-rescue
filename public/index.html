@@ -26,7 +26,8 @@
       position: absolute;
       display: flex;
       align-items:center;
-      padding-left:25px;
+      justify-content: space-between;
+      padding:0 25px;
       height: 50px;
       top: 0;
       left: 0;
@@ -35,11 +36,20 @@
       color: white;
     }
 
+    #header a {
+      color: #fff;
+    }
+
+    #header a:hover {
+      background-color: black;
+    }
+
   </style>
 </head>
 <body>
 <div id='header'>
-  Fire Animal Rescue Response Oregon 2020
+  <div>Fire Animal Rescue Response Oregon 2020</div>
+  <div><a href='https://github.com/tmcw/fire-animal-rescue'>source code</a></div>
 </div>
 
 <div id='map'></div>
