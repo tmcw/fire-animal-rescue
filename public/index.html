@@ -137,7 +137,11 @@ fetch(fires).then(r => r.json()).then(fires => {
       style: function (feature) {
           return {color: 'red'};
       }
-  }).addTo(map)
+  })
+  .eachLayer(function(layer) {
+    layer.bindPopup(layer.feature.properties.IncidentName);
+  })
+  .addTo(map)
 });
 
     
