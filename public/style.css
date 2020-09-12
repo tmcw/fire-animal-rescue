@@ -98,10 +98,19 @@ section label {
   color: #666;
 }
 
+h5 {
+  color: white;
+  padding: 2px;
+}
+
 .have_room {
   padding: 2px;
   background: #5f4690;
   line-height: 0;
+}
+
+.have_room-header {
+  background: #5f4690;
 }
 
 .can_help {
@@ -110,10 +119,18 @@ section label {
   line-height: 0;
 }
 
+.can_help-header {
+  background: #73af48;
+}
+
 .need_help {
   padding: 2px;
   background: #cc503e;
   line-height: 0;
+}
+
+.need_help-header {
+  background: #cc503e;
 }
 
 count {

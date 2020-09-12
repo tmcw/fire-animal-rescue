@@ -131,6 +131,7 @@ function showLayer(layer) {
   layer.feature.properties.features.forEach((feat) => {
     const section = elem.appendChild(document.createElement("section"));
     const h5 = section.appendChild(document.createElement("h5"));
+    h5.className = feat.type + "-header";
     h5.innerText =
       feat.type == "can_help"
         ? "Can help"
