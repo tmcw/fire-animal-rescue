@@ -58,46 +58,61 @@ async function getSheet(token, type) {
     .then((r) => r.text())
     .then((text) => {
       const parsed = d3.csvParse(text);
-      return parsed
-        .map((feature) => {
-          const rawZip =
-            feature["What zip code are you based out of?  "] ||
-            feature["What zip code is the place you can house animals? "] ||
-            feature["Zip Code where help is needed "];
-          const zipString = rawZip.substring(0, 5);
-          const zip = zipcodes.lookup(zipString);
-          if (!zip) {
-            if (rawZip) {
-              console.log(rawZip);
+      return (
+        parsed
+          .map((feature) => {
+            const rawZip =
+              feature["What zip code are you based out of?  "] ||
+              feature["What zip code is the place you can house animals? "] ||
+              feature["Zip Code where help is needed "];
+            const zipString = rawZip.substring(0, 5);
+            const zip = zipcodes.lookup(zipString);
+            if (!zip) {
+              if (rawZip) {
+                /**
+                 * Logging the failed zip codes so that we can manually review them.
+                 * As far as I have tested (Tom), all of the failed zip codes are
+                 * zip codes that don't actually exist. The zip database in the zipcodes
+                 * module is fairly recent. */
+                console.log(rawZip);
+              }
+              return;
             }
-            return;
-          }
-          feature[
-            "VOLUNTEER COMMENTS Key info, date, time, intitials"
-          ] = undefined;
-          feature["VOLUNTEER NOTES "] = undefined;
 
-          for (const [source, target] of remap) {
-            const val = feature[source];
-            if (val !== undefined) {
-              delete feature[source];
-              feature[target] = val;
+            /**
+             * Try to censor volunteer notes for now. We can include them if we
+             * want to. This is mainly a question of whether they are public or private. */
+            feature[
+              "VOLUNTEER COMMENTS Key info, date, time, intitials"
+            ] = undefined;
+            feature["VOLUNTEER NOTES "] = undefined;
+
+            for (const [source, target] of remap) {
+              const val = feature[source];
+              if (val !== undefined) {
+                delete feature[source];
+                feature[target] = val;
+              }
             }
-          }
-          return {
-            type: "Feature",
-            properties: {
-              zip: zipString,
-              type,
-              ...feature,
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [zip.longitude, zip.latitude],
-            },
-          };
-        })
-        .filter((f) => f);
+            return {
+              type: "Feature",
+              properties: {
+                zip: zipString,
+                type,
+                ...feature,
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [zip.longitude, zip.latitude],
+              },
+            };
+          })
+          /**
+           * This is equivalent to .compact in Ruby. We ignore some
+           * rows of the spreadsheet because of wrong zip codes: this
+           * line removes those from the array. */
+          .filter((f) => f)
+      );
     });
 }
 
@@ -123,6 +138,8 @@ app.get("/data.geojson", (_req, res) => {
       getSheet(HAVE_ROOM_TOKEN, "have_room"),
       getSheet(NEED_HELP_TOKEN, "need_help"),
     ]).then(([can_help, have_room, need_help]) => {
+      /**
+       * Group by zip code, based on fancy weird d3 magic. */
       const groups = d3.group(
         [].concat(can_help).concat(have_room).concat(need_help),
         (feature) => feature.properties.zip

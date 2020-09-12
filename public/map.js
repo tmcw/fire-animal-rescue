@@ -58,26 +58,28 @@ fetch("/data.geojson")
       .eachLayer(function (layer) {
         const elem = document.createElement("div");
 
-        let widthNeeded = 5;
+        let widthNeeded = 0;
 
         let has_need = false;
 
         let total = 0;
 
         for (let [label, count] of layer.feature.properties.counts) {
-          const img = elem.appendChild(document.createElement("img"));
-          img.width = 12;
-          img.height = 12;
-          widthNeeded += 18;
+          const div = elem.appendChild(document.createElement("div"));
+          div.className = label;
+          const img = div.appendChild(document.createElement("img"));
+          img.width = 16;
+          img.height = 16;
+          widthNeeded += 20;
           img.src = images[label];
           total += count;
           if (label === "need_help") {
             has_need = true;
           }
         }
-        if (total > 1) {
-          elem.appendChild(document.createTextNode(`x${total}`));
-          widthNeeded += 12;
+        if (total > 3) {
+          const count = elem.appendChild(document.createElement("count"));
+          count.textContent = ` x${total}`;
         }
 
         var myIcon = L.divIcon({
@@ -139,7 +141,7 @@ fetch(fires)
   .then((fires) => {
     L.geoJSON(fires, {
       style: function (_feature) {
-        return { color: "#f4b0db" };
+        return { color: "#6f4070" };
       },
     })
       .eachLayer(function (layer) {

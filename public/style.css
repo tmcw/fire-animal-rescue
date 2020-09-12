@@ -53,32 +53,29 @@ html {
 .marker {
   font-size: 10px;
   background: #fff;
-  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.3);
-  border-radius: 5px;
+  box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 1);
 }
 
 .marker:hover {
-  box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 0px 2px rgba(0, 0, 0, 1);
 }
 
 .marker.alert:hover {
-  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 0.3);
+  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
 }
 
 .marker > div {
-  padding-top: 3px;
   display: flex;
-  justify-content: space-around;
   align-items: center;
 }
 
 .marker.alert {
-  box-shadow: 0px 0px 0px 4px rgba(255, 0, 0, 0.8);
+  box-shadow: 0px 0px 0px 4px rgba(255, 0, 0, 1);
 }
 
 .marker.clicked {
-  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 0.8),
-    0px 0px 0px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 0px 0px 5px rgba(255, 255, 255, 1),
+    0px 0px 0px 8px rgba(0, 0, 0, 1);
 }
 
 section {
@@ -99,4 +96,27 @@ section label {
   font-size: 12px;
   padding-top: 5px;
   color: #666;
+}
+
+.have_room {
+  padding: 2px;
+  background: #5f4690;
+  line-height: 0;
+}
+
+.can_help {
+  padding: 2px;
+  background: #73af48;
+  line-height: 0;
+}
+
+.need_help {
+  padding: 2px;
+  background: #cc503e;
+  line-height: 0;
+}
+
+count {
+  padding-left: 4px;
+  font-weight: bold;
 }
