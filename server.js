@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 
 async function getSheet(token) {
   const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
+  console.log(url);
   return fetch(url)
     .then((r) => r.text())
     .then((text) => {
