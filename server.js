@@ -11,82 +11,85 @@ const options = {
 };
 const cache = new LRU(options);
 
-async function getSheet(token) {
+async function getSheet(token, type) {
   const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
   return fetch(url)
     .then((r) => r.text())
     .then((text) => {
       const parsed = d3.csvParse(text);
-      return {
-        type: "FeatureCollection",
-        features: parsed
-          .map((feature) => {
-            const rawZip =
-              feature["What zip code are you based out of?  "] ||
-              feature["What zip code is the place you can house animals? "] ||
-              feature["Zip Code where help is needed "];
-            const zip = zipcodes.lookup(rawZip.substring(0, 5));
-            if (!zip) {
-              if (rawZip) {
-                console.log(rawZip);
-              }
-              return;
+      return parsed
+        .map((feature) => {
+          const rawZip =
+            feature["What zip code are you based out of?  "] ||
+            feature["What zip code is the place you can house animals? "] ||
+            feature["Zip Code where help is needed "];
+          const zipString = rawZip.substring(0, 5);
+          const zip = zipcodes.lookup(zipString);
+          if (!zip) {
+            if (rawZip) {
+              console.log(rawZip);
             }
-            feature[
-              "VOLUNTEER COMMENTS Key info, date, time, intitials"
-            ] = undefined;
-            feature["VOLUNTEER NOTES "] = undefined;
-            return {
-              type: "Feature",
-              properties: feature,
-              geometry: {
-                type: "Point",
-                coordinates: [zip.longitude, zip.latitude],
-              },
-            };
-          })
-          .filter((f) => f),
-      };
+            return;
+          }
+          feature[
+            "VOLUNTEER COMMENTS Key info, date, time, intitials"
+          ] = undefined;
+          feature["VOLUNTEER NOTES "] = undefined;
+          return {
+            type: "Feature",
+            properties: {
+              zip: zipString,
+              type,
+              ...feature,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [zip.longitude, zip.latitude],
+            },
+          };
+        })
+        .filter((f) => f);
     });
 }
 
 const CAN_HELP_TOKEN = "11aRnEtMClL_q15563Yq16teAIA3iR8raspWWP7Wts1k";
+const NEED_HELP_TOKEN = "1faFgo0piEoSYb4OrmvWvhmXw5DNBPt7EMisI9qZc3GE";
+const HAVE_ROOM_TOKEN = "1FMyS6osRgKoE3zYKvNtjm3b028uMRiCOvVrPEmn9ITg";
 
-app.get("/can_help.geojson", (_req, res) => {
+app.get("/data.geojson", (_req, res) => {
   const cached = cache.get("can_help");
   if (cached) {
     res.send(cached);
   } else {
-    getSheet(CAN_HELP_TOKEN).then((json) => {
+    Promise.all([
+      getSheet(CAN_HELP_TOKEN, "can_help"),
+      getSheet(HAVE_ROOM_TOKEN, "have_room"),
+      getSheet(NEED_HELP_TOKEN, "need_help"),
+    ]).then(([can_help, have_room, need_help]) => {
+      const groups = d3.group(
+        [].concat(can_help).concat(have_room).concat(need_help),
+        (feature) => feature.properties.zip
+      );
+      const json = {
+        type: "FeatureCollection",
+        features: Array.from(groups, ([_key, values]) => {
+          return {
+            type: "Feature",
+            geometry: values[0].geometry,
+            properties: {
+              counts: [
+                ...d3.rollup(
+                  values,
+                  (v) => v.length,
+                  (v) => v.properties.type
+                ),
+              ],
+              features: values.map((v) => v.properties),
+            },
+          };
+        }),
+      };
       cache.set("can_help", json);
-      res.send(json);
-    });
-  }
-});
-
-const HAVE_ROOM_TOKEN = "1FMyS6osRgKoE3zYKvNtjm3b028uMRiCOvVrPEmn9ITg";
-
-app.get("/have_room.geojson", (_req, res) => {
-  const cached = cache.get("have_room");
-  if (cached) {
-    res.send(cached);
-  } else {
-    getSheet(HAVE_ROOM_TOKEN).then((json) => {
-      cache.set("have_room", json);
-      res.send(json);
-    });
-  }
-});
-
-const NEED_HELP_TOKEN = "1faFgo0piEoSYb4OrmvWvhmXw5DNBPt7EMisI9qZc3GE";
-
-app.get("/need_help.geojson", (_req, res) => {
-  const cached = cache.get("need_help");
-  if (cached) {
-    res.send(cached);
-  } else {
-    getSheet(NEED_HELP_TOKEN).then((json) => {
-      cache.set("need_help", json);
       res.send(json);
     });
   }
