@@ -5,10 +5,9 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
-const URL = process.env.VOLUNTEERS_URL;
-
-app.get("/", (_req, res) => {
-  fetch(URL)
+async function getSheet(token) {
+  const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
+  return fetch(url)
     .then((r) => r.text())
     .then((text) => {
       const parsed = d3.csvParse(text);
@@ -35,8 +34,19 @@ app.get("/", (_req, res) => {
           })
           .filter((f) => f),
       };
-    })
-    .then((parsed) => res.send(parsed));
+    });
+}
+
+app.get("/can_help.geojson", (_req, res) => {
+  getSheet(process.env.CAN_HELP_TOKEN).then((json) => res.send(json));
+});
+
+app.get("/have_room.geojson", (_req, res) => {
+  getSheet(process.env.HAVE_ROOM_TOKEN).then((json) => res.send(json));
+});
+
+app.get("/need_help.geojson", (_req, res) => {
+  getSheet(process.env.NEED_HELP_TOKEN).then((json) => res.send(json));
 });
 
 app.listen(port, () => {

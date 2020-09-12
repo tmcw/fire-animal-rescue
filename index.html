@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    body { padding: 0; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div style='height:500px' id='map'></div>
+
+<script type='module'>
+var map = L.map('map').setView([51.505, -0.09], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+https://docs.google.com/spreadsheets/d/11aRnEtMClL_q15563Yq16teAIA3iR8raspWWP7Wts1k/edit?usp=sharing
+
+fetch('https://docs.google.com/spreadsheets/d/11aRnEtMClL_q15563Yq16teAIA3iR8raspWWP7Wts1k/gviz/tq?tqx=out:csv&sheet=Sheet1')
+  .then(r => {
+    return r.text()
+  })
+  .then(text => {
+    console.log(text);
+    console.log(d3.csvParse(text));
+    return d3.csvParse(text);
+  });
+</script>
+
+</body>
