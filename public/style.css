@@ -120,3 +120,7 @@ count {
   padding-left: 4px;
   font-weight: bold;
 }
+
+section p {
+  margin: 0;
+}

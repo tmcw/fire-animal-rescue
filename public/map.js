@@ -124,11 +124,25 @@ function showLayer(layer) {
   layer.getElement().classList.add("clicked");
   activeLayer = layer;
   const elem = document.getElementById("sidebar");
-  elem.innerHTML = layer.feature.properties.features
-    .map((feat) => {
-      return templates[feat.type](feat);
-    })
-    .join("\n");
+  elem.innerHTML = "";
+  layer.feature.properties.features.forEach((feat) => {
+    const section = elem.appendChild(document.createElement("section"));
+    const h5 = section.appendChild(document.createElement("h5"));
+    h5.innerText =
+      feat.type == "can_help"
+        ? "Can help"
+        : feat.type == "have_room"
+        ? "Have room"
+        : "Need help";
+    for (let k in feat) {
+      if (feat[k].trim()) {
+        const label = section.appendChild(document.createElement("label"));
+        const p = section.appendChild(document.createElement("p"));
+        label.innerText = k;
+        p.innerText = feat[k];
+      }
+    }
+  });
 }
 
 /**

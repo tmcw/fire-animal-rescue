@@ -18,34 +18,34 @@ const cache = new LRU(options);
  * to email address rather than a literal string, so that someone who
  * updates the header doesn't break the site.
  */
-const remap = [
-  ["Email Address ", "email"],
-  ["Email Address", "email"],
-  ["Name (first and last) ", "name"],
-  ["Phone Number - we MUST be able to reach you.  ", "phone"],
-  ["Phone Number - we MUST be able to reach you. ", "phone"],
-  ["What zip code are you based out of?  ", "zip"],
-  ["What's your hauling ability?  ", "hauling"],
-  ["What counties are you willing to travel to?  ", "travel_to"],
-  ["Describe how many animals need help (how many, what breed) ", "animals"],
-  [
-    "Do you need transportation or a place to keep the animals?  ",
-    "need_transportation",
-  ],
-  [
-    "Is a person still at the property with the animals?  ",
-    "still_at_property",
-  ],
-  ["Will you be able to stay with the animals on site?  ", "able_to_stay"],
-  [
-    "Phone Number- we will not send resources out without confirming by phone. ",
-    "phone",
-  ],
-  [
-    "Email Address Please include details in Volunteer Notes - from start to finish. Your initials when you start/accept the request along with time you started, updates and key info as you progress, who you've connected for transport, & where they are going/shelter ",
-    "email",
-  ],
-];
+// const remap = [
+//   ["Email Address ", "email"],
+//   ["Email Address", "email"],
+//   ["Name (first and last) ", "name"],
+//   ["Phone Number - we MUST be able to reach you.  ", "phone"],
+//   ["Phone Number - we MUST be able to reach you. ", "phone"],
+//   ["What zip code are you based out of?  ", "zip"],
+//   ["What's your hauling ability?  ", "hauling"],
+//   ["What counties are you willing to travel to?  ", "travel_to"],
+//   ["Describe how many animals need help (how many, what breed) ", "animals"],
+//   [
+//     "Do you need transportation or a place to keep the animals?  ",
+//     "need_transportation",
+//   ],
+//   [
+//     "Is a person still at the property with the animals?  ",
+//     "still_at_property",
+//   ],
+//   ["Will you be able to stay with the animals on site?  ", "able_to_stay"],
+//   [
+//     "Phone Number- we will not send resources out without confirming by phone. ",
+//     "phone",
+//   ],
+//   [
+//     "Email Address Please include details in Volunteer Notes - from start to finish. Your initials when you start/accept the request along with time you started, updates and key info as you progress, who you've connected for transport, & where they are going/shelter ",
+//     "email",
+//   ],
+// ];
 
 /**
  * The core method that fetches a Google sheet from the Google API,
@@ -87,13 +87,6 @@ async function getSheet(token, type) {
             ] = undefined;
             feature["VOLUNTEER NOTES "] = undefined;
 
-            for (const [source, target] of remap) {
-              const val = feature[source];
-              if (val !== undefined) {
-                delete feature[source];
-                feature[target] = val;
-              }
-            }
             return {
               type: "Feature",
               properties: {
