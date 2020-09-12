@@ -86,7 +86,7 @@ fetch("/data.geojson")
           }
         }
 
-        layer.feature.properties.text = allFields;
+        layer.feature.properties.text = allFields.toLowerCase();
 
         if (total > 3) {
           const count = elem.appendChild(document.createElement("count"));
@@ -107,21 +107,17 @@ fetch("/data.geojson")
       })
       .addTo(map);
 
-    new L.Control.Search({
-      layer: pointsLayer,
-      propertyName: "text",
-      initial: false,
-      autoCollapse: true,
-      delayType: 200,
-      buildTip: function (text, val) {
-        const div = document.createElement("div");
-        div.innerText = text.substring(0, 64);
-        return div;
-      },
-      moveToLocation: function (latlng, _title, map) {
-        map.setView(latlng, 15); // access the zoom
-      },
-    }).addTo(map);
+    document.getElementById("search").addEventListener("input", (e) => {
+      const query = e.target.value.toLowerCase();
+      pointsLayer.eachLayer((layer) => {
+        const match = layer.feature.properties.text.indexOf(query) != -1;
+        if (match) {
+          layer.getElement().style.opacity = 1;
+        } else {
+          layer.getElement().style.opacity = 0.2;
+        }
+      });
+    });
   });
 
 function showLayer(layer) {
