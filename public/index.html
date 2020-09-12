@@ -8,13 +8,40 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <style>
-    body { padding: 0; margin: 0; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, helvetica neue, helvetica, Ubuntu, roboto, noto, segoe ui, arial, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
     body, html { min-height: 100%; }
+    #map {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    #header {
+      position: absolute;
+      display: flex;
+      align-items:center;
+      padding-left:25px;
+      height: 50px;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: darkred;
+      color: white;
+    }
+
   </style>
 </head>
 <body>
+<div id='header'>
+  Fire Animal Rescue Response Oregon 2020
+</div>
 
-<div style='height:100vh' id='map'></div>
+<div id='map'></div>
 
 <script type='module'>
 var map = L.map('map');
@@ -74,7 +101,12 @@ Promise.all([
       .extend(haveRoomCluster.getBounds())
       .extend(canHelpCluster.getBounds());
 
-    map.fitBounds(bounds);
+    map.fitBounds([
+          [44.044167353572185,
+          -124.07409667968749],
+          [47.137424646293866,
+          -118.41613769531249],
+    ]);
   });
 </script>
 
