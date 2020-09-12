@@ -2,15 +2,18 @@
 <html>
 <head>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <style>
     body { padding: 0; margin: 0; }
+    body, html { min-height: 100%; }
   </style>
 </head>
 <body>
 
-<div style='height:500px' id='map'></div>
+<div style='height:100vh' id='map'></div>
 
 <script type='module'>
 var map = L.map('map');
@@ -18,7 +21,6 @@ var map = L.map('map');
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
-
 
 Promise.all([
   fetch('/can_help.geojson').then(r => r.json()),
@@ -30,7 +32,8 @@ Promise.all([
             return {color: feature.properties.color};
         }
     }).bindPopup(function (layer) {
-        return layer.feature.properties.description;
+      console.log(layer);
+      return layer.feature.properties.description;
     }).addTo(map);
 
     const needHelpLayer = L.geoJSON(need_help, {

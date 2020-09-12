@@ -17,13 +17,20 @@ async function getSheet(token) {
         features: parsed
           .map((feature) => {
             const zip =
-              usZips[feature["What zip code are you based out of?  "]];
+              usZips[
+                feature["What zip code are you based out of?  "] ||
+                  feature[
+                    "What zip code is the place you can house animals? "
+                  ] ||
+                  feature["Zip Code where help is needed "]
+              ];
             if (!zip) {
               return;
             }
             feature[
               "VOLUNTEER COMMENTS Key info, date, time, intitials"
             ] = undefined;
+            feature["VOLUNTEER NOTES "] = undefined;
             return {
               type: "Feature",
               properties: feature,
