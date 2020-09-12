@@ -6,6 +6,11 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
+/**
+ * this option defines how often data is forced to be updated
+ * from the spreadsheets - measured in milliseconds, so the 1000 * 60 is
+ * counting up to one minute and the final number is the number of minutes.
+ */
 const options = {
   maxAge: 1000 * 60 * 5,
 };
