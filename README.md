@@ -1,4 +1,4 @@
-very fast microsite for animal rescue
+very simple microsite for animal rescue
 
 https://fire-animal-rescue.herokuapp.com/
 
