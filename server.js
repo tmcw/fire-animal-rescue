@@ -11,6 +11,13 @@ const options = {
 };
 const cache = new LRU(options);
 
+/**
+ * The spreadsheets that back this thing have long, descriptive headers
+ * that don't work well in code. This translates them. This could be improved
+ * to make it less fragile - matching anything that has "email" in it
+ * to email address rather than a literal string, so that someone who
+ * updates the header doesn't break the site.
+ */
 const remap = [
   ["Email Address ", "email"],
   ["Email Address", "email"],
@@ -40,6 +47,11 @@ const remap = [
   ],
 ];
 
+/**
+ * The core method that fetches a Google sheet from the Google API,
+ * parses it as a CSV file, looks up the zip code, then turns that into a
+ * GeoJSON feature object.
+ */
 async function getSheet(token, type) {
   const url = `https://docs.google.com/spreadsheets/d/${token}/gviz/tq?tqx=out:csv&sheet=Sheet1`;
   return fetch(url)
@@ -94,10 +106,18 @@ const NEED_HELP_TOKEN = "1faFgo0piEoSYb4OrmvWvhmXw5DNBPt7EMisI9qZc3GE";
 const HAVE_ROOM_TOKEN = "1FMyS6osRgKoE3zYKvNtjm3b028uMRiCOvVrPEmn9ITg";
 
 app.get("/data.geojson", (_req, res) => {
+  /**
+   * This data is cached so that we don't have to make a request
+   * to google sheets on every site visit.
+   */
   const cached = cache.get("can_help");
   if (cached) {
     res.send(cached);
   } else {
+    /**
+     * load all the sheets from google maps, and then
+     * cluster them by simply grouping on zip codes.
+     */
     Promise.all([
       getSheet(CAN_HELP_TOKEN, "can_help"),
       getSheet(HAVE_ROOM_TOKEN, "have_room"),

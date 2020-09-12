@@ -11,6 +11,10 @@ spreadsheet for 5 minutes so that most users don't have to wait for google's ser
 by express. it could be served statically through github pages or etc, but that
 doesn't really matter either way
 
+The map is powered by [Leaflet](https://leafletjs.com/reference-1.7.1.html). We
+use [lodash templates](https://lodash.com/docs/4.17.15#template) to show the help requests
+in the sidebar.
+
 site is on heroku, auto-deploying from master, the server and frontend as one chunk.
 
 ---
