@@ -72,7 +72,13 @@ Promise.all([
     const haveRoomCluster = L.markerClusterGroup().addTo(map);
     const canHelpCluster = L.markerClusterGroup().addTo(map);
 
-    needHelpCluster.addLayers(L.geoJSON(can_help, {
+    L.control.layers(undefined, {
+      "I need help": needHelpCluster,
+      "I have room": haveRoomCluster,
+      "I can help": canHelpCluster,
+    }).addTo(map);
+
+    canHelpCluster.addLayers(L.geoJSON(can_help, {
         style: function (feature) {
             return {color: feature.properties.color};
         }
