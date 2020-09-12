@@ -1,0 +1,17 @@
+{
+  "name": "fire-animal-rescue",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:tmcw/fire-animal-rescue.git",
+  "author": "Tom MacWright <tom@macwright.org>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "d3": "^6.1.1",
+    "express": "^4.17.1",
+    "node-fetch": "^2.6.1",
+    "us-zips": "^4.0.2"
+  }
+}
