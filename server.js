@@ -63,13 +63,13 @@ async function getSheet(token, type) {
     .then((r) => r.text())
     .then((text) => {
       const parsed = d3.csvParse(text);
+      const zipColumnName = parsed.columns.find((column) => {
+        return column.match(/\bzip\b/gi);
+      });
       return (
         parsed
           .map((feature) => {
-            const rawZip =
-              feature["What zip code are you based out of?  "] ||
-              feature["What zip code is the place you can house animals? "] ||
-              feature["Zip Code where help is needed "];
+            const rawZip = feature[zipColumnName];
             const zipString = rawZip.substring(0, 5);
             const zip = zipcodes.lookup(zipString);
             if (!zip) {
