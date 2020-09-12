@@ -40,7 +40,7 @@ Unlikely but possible.
 
 More likely is a dramatic change in the spreadsheet. The algorithm tries to be robust,
 matching any column with 'zip' in it as the zip code so that renamings don't affect
-it. But if someone where to rename the zip column to something without zip in the name,
+it. But if someone were to rename the zip column to something without zip in the name,
 the dots would disappear. That manifests as a 500 internal error which is visible in
 Heroku metrics, plus people will obviously notice. The fix is tweaking the algorithm to
 match.
