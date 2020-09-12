@@ -54,6 +54,8 @@ function popup(obj) {
   let elem = document.createElement('div');
 
   for (let k in obj) {
+    const value = obj[k].trim();
+    if (!value) continue;
     const h3 = elem.appendChild(document.createElement('h3'));
     const div = elem.appendChild(document.createElement('div'));
     h3.textContent = k;
@@ -63,21 +65,24 @@ function popup(obj) {
   return elem;
 }
 
-Promise.all([
-  fetch('/can_help.geojson').then(r => r.json()),
-  fetch('/need_help.geojson').then(r => r.json()),
-  fetch('/have_room.geojson').then(r => r.json())
-  ]).then(([can_help, need_help, have_room]) => {
-    const needHelpCluster = L.markerClusterGroup().addTo(map);
-    const haveRoomCluster = L.markerClusterGroup().addTo(map);
-    const canHelpCluster = L.markerClusterGroup().addTo(map);
+map.fitBounds([
+      [44.044167353572185,
+      -124.07409667968749],
+      [47.137424646293866,
+      -118.41613769531249],
+]);
 
-    L.control.layers(undefined, {
-      "I need help": needHelpCluster,
-      "I have room": haveRoomCluster,
-      "I can help": canHelpCluster,
-    }).addTo(map);
+const needHelpCluster = L.markerClusterGroup().addTo(map);
+const haveRoomCluster = L.markerClusterGroup().addTo(map);
+const canHelpCluster = L.markerClusterGroup().addTo(map);
 
+L.control.layers(undefined, {
+  "I need help": needHelpCluster,
+  "I have room": haveRoomCluster,
+  "I can help": canHelpCluster,
+}).addTo(map);
+
+fetch('/can_help.geojson').then(r => r.json()).then(can_help => {
     canHelpCluster.addLayers(L.geoJSON(can_help, {
         style: function (feature) {
             return {color: feature.properties.color};
@@ -85,8 +90,9 @@ Promise.all([
     }).eachLayer(function (layer) {
       layer.bindPopup(popup(layer.feature.properties));
     }));
+})
 
-
+fetch('/need_help.geojson').then(r => r.json()).then(need_help => {
     needHelpCluster.addLayers(L.geoJSON(need_help, {
         style: function (feature) {
             return {color: feature.properties.color};
@@ -94,26 +100,19 @@ Promise.all([
     }).eachLayer(function (layer) {
       layer.bindPopup(popup(layer.feature.properties));
     }));
+});
 
-    haveRoomCluster.addLayers(L.geoJSON(have_room, {
-        style: function (feature) {
-            return {color: feature.properties.color};
-        }
-    }).eachLayer(function (layer) {
-      layer.bindPopup(popup(layer.feature.properties));
-    }))
+fetch('/have_room.geojson').then(r => r.json()).then(have_room => {
+  haveRoomCluster.addLayers(L.geoJSON(have_room, {
+      style: function (feature) {
+          return {color: feature.properties.color};
+      }
+  }).eachLayer(function (layer) {
+    layer.bindPopup(popup(layer.feature.properties));
+  }))
+});
 
-    const bounds = needHelpCluster.getBounds()
-      .extend(haveRoomCluster.getBounds())
-      .extend(canHelpCluster.getBounds());
-
-    map.fitBounds([
-          [44.044167353572185,
-          -124.07409667968749],
-          [47.137424646293866,
-          -118.41613769531249],
-    ]);
-  });
+    
 </script>
 
 </body>
