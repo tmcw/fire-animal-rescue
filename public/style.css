@@ -61,7 +61,7 @@ html {
 }
 
 .marker.alert:hover {
-  box-shadow: 0px 0px 0px 2px rgba(255, 0, 0, 1);
+  box-shadow: 0px 0px 0px 2px #cc503e;
 }
 
 .marker > div {
@@ -70,7 +70,7 @@ html {
 }
 
 .marker.alert {
-  box-shadow: 0px 0px 0px 4px rgba(255, 0, 0, 1);
+  box-shadow: 0px 0px 0px 4px #cc503e;
 }
 
 .marker.clicked {
