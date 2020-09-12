@@ -12,3 +12,16 @@ by express. it could be served statically through github pages or etc, but that
 doesn't really matter either way
 
 site is on heroku, auto-deploying from master, the server and frontend as one chunk.
+
+---
+
+### Development
+
+You'll need Node.js. Any recent version should do. Install the dependencies with npm or yarn.
+Then run:
+
+```
+$ npm run start
+```
+
+Deployment is automatic through Heroku. Just merge a PR to master and it'll update.

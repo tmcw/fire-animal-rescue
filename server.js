@@ -50,36 +50,42 @@ async function getSheet(token) {
     });
 }
 
+const CAN_HELP_TOKEN = "11aRnEtMClL_q15563Yq16teAIA3iR8raspWWP7Wts1k";
+
 app.get("/can_help.geojson", (_req, res) => {
   const cached = cache.get("can_help");
   if (cached) {
     res.send(cached);
   } else {
-    getSheet(process.env.CAN_HELP_TOKEN).then((json) => {
+    getSheet(CAN_HELP_TOKEN).then((json) => {
       cache.set("can_help", json);
       res.send(json);
     });
   }
 });
 
+const HAVE_ROOM_TOKEN = "1FMyS6osRgKoE3zYKvNtjm3b028uMRiCOvVrPEmn9ITg";
+
 app.get("/have_room.geojson", (_req, res) => {
   const cached = cache.get("have_room");
   if (cached) {
     res.send(cached);
   } else {
-    getSheet(process.env.HAVE_ROOM_TOKEN).then((json) => {
+    getSheet(HAVE_ROOM_TOKEN).then((json) => {
       cache.set("have_room", json);
       res.send(json);
     });
   }
 });
 
+const NEED_HELP_TOKEN = "1faFgo0piEoSYb4OrmvWvhmXw5DNBPt7EMisI9qZc3GE";
+
 app.get("/need_help.geojson", (_req, res) => {
   const cached = cache.get("need_help");
   if (cached) {
     res.send(cached);
   } else {
-    getSheet(process.env.NEED_HELP_TOKEN).then((json) => {
+    getSheet(NEED_HELP_TOKEN).then((json) => {
       cache.set("need_help", json);
       res.send(json);
     });
