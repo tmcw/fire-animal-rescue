@@ -45,6 +45,8 @@ const images = {
   need_help: "alert-triangle.svg",
 };
 
+let activeLayer = undefined;
+
 fetch("/data.geojson")
   .then((r) => r.json())
   .then((can_help) => {
@@ -109,6 +111,11 @@ const templates = {
 };
 
 function showLayer(layer) {
+  if (activeLayer) {
+    activeLayer.getElement().classList.remove("clicked");
+  }
+  layer.getElement().classList.add("clicked");
+  activeLayer = layer;
   const elem = document.getElementById("sidebar");
   elem.innerHTML = layer.feature.properties.features
     .map((feat) => {
