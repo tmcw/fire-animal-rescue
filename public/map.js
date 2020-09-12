@@ -50,7 +50,7 @@ let activeLayer = undefined;
 fetch("/data.geojson")
   .then((r) => r.json())
   .then((can_help) => {
-    L.geoJSON(can_help, {
+    const pointsLayer = L.geoJSON(can_help, {
       style: function (feature) {
         return { color: feature.properties.color };
       },
@@ -77,6 +77,17 @@ fetch("/data.geojson")
             has_need = true;
           }
         }
+
+        let allFields = "";
+
+        for (let feature of layer.feature.properties.features) {
+          for (let k in feature) {
+            allFields += " " + feature[k];
+          }
+        }
+
+        layer.feature.properties.text = allFields;
+
         if (total > 3) {
           const count = elem.appendChild(document.createElement("count"));
           count.textContent = ` x${total}`;
@@ -95,27 +106,23 @@ fetch("/data.geojson")
         });
       })
       .addTo(map);
-  });
 
-const templates = {
-  can_help: _.template(`<section><h5>Can help</h5>
-                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label><%= phone %></div>
-                       <div><label>zip code based out of</label><%= zip %></div>
-                       <div><label>willing to travel to</label><%= travel_to %></div>
-                       <div><label>hauling capacity</label><%= hauling %></div></section>`),
-  have_room: _.template(`<section><h5>Have room</h5>
-                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label><%= phone %></div></section>`),
-  need_help: _.template(`<section><h5 style="color:darkred">Needs help</h5>
-                       <div><label>email</label><a href="mailto:<%= email %>"><%= email %></a></div>
-                       <div><label>phone</label><%= phone %></div>
-                       <div><label>do you need transportation or a place to keep the animals?</label><%= need_transportation %></div>
-                       <div><label>Is a person still at the property with the animals?</label> <%= still_at_property %></div>
-                       <div><label>Will you be able to stay with the animals on site?</label> <%= able_to_stay %></div>
-                       </section>
-                       `),
-};
+    new L.Control.Search({
+      layer: pointsLayer,
+      propertyName: "text",
+      initial: false,
+      autoCollapse: true,
+      delayType: 200,
+      buildTip: function (text, val) {
+        const div = document.createElement("div");
+        div.innerText = text.substring(0, 64);
+        return div;
+      },
+      moveToLocation: function (latlng, _title, map) {
+        map.setView(latlng, 15); // access the zoom
+      },
+    }).addTo(map);
+  });
 
 function showLayer(layer) {
   if (activeLayer) {
