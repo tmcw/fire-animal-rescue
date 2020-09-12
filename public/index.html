@@ -3,6 +3,7 @@
 <head>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
   <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -22,39 +23,56 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+function popup(obj) {
+  let elem = document.createElement('div');
+
+  for (let k in obj) {
+    const h3 = elem.appendChild(document.createElement('h3'));
+    const div = elem.appendChild(document.createElement('div'));
+    h3.textContent = k;
+    div.textContent = obj[k];
+  }
+
+  return elem;
+}
+
 Promise.all([
   fetch('/can_help.geojson').then(r => r.json()),
   fetch('/need_help.geojson').then(r => r.json()),
   fetch('/have_room.geojson').then(r => r.json())
   ]).then(([can_help, need_help, have_room]) => {
-    const canHelpLayer = L.geoJSON(can_help, {
+    const needHelpCluster = L.markerClusterGroup().addTo(map);
+    const haveRoomCluster = L.markerClusterGroup().addTo(map);
+    const canHelpCluster = L.markerClusterGroup().addTo(map);
+
+    needHelpCluster.addLayers(L.geoJSON(can_help, {
         style: function (feature) {
             return {color: feature.properties.color};
         }
-    }).bindPopup(function (layer) {
-      console.log(layer);
-      return layer.feature.properties.description;
-    }).addTo(map);
+    }).eachLayer(function (layer) {
+      layer.bindPopup(popup(layer.feature.properties));
+    }));
 
-    const needHelpLayer = L.geoJSON(need_help, {
+
+    needHelpCluster.addLayers(L.geoJSON(need_help, {
         style: function (feature) {
             return {color: feature.properties.color};
         }
-    }).bindPopup(function (layer) {
-        return layer.feature.properties.description;
-    }).addTo(map);
+    }).eachLayer(function (layer) {
+      layer.bindPopup(popup(layer.feature.properties));
+    }));
 
-    const haveRoomLayer = L.geoJSON(have_room, {
+    haveRoomCluster.addLayers(L.geoJSON(have_room, {
         style: function (feature) {
             return {color: feature.properties.color};
         }
-    }).bindPopup(function (layer) {
-        return layer.feature.properties.description;
-    }).addTo(map);
+    }).eachLayer(function (layer) {
+      layer.bindPopup(popup(layer.feature.properties));
+    }))
 
-    const bounds = needHelpLayer.getBounds()
-      .extend(haveRoomLayer.getBounds())
-      .extend(canHelpLayer.getBounds());
+    const bounds = needHelpCluster.getBounds()
+      .extend(haveRoomCluster.getBounds())
+      .extend(canHelpCluster.getBounds());
 
     map.fitBounds(bounds);
   });
