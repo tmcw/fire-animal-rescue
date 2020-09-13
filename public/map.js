@@ -19,21 +19,6 @@ L.tileLayer(
   }
 ).addTo(map);
 
-function popup(obj) {
-  let elem = document.createElement("div");
-
-  for (let k in obj) {
-    const value = obj[k].trim();
-    if (!value) continue;
-    const h3 = elem.appendChild(document.createElement("h3"));
-    const div = elem.appendChild(document.createElement("div"));
-    h3.textContent = k;
-    div.textContent = obj[k];
-  }
-
-  return elem;
-}
-
 map.fitBounds([
   [44.044167353572185, -124.07409667968749],
   [47.137424646293866, -118.41613769531249],
