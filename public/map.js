@@ -136,7 +136,7 @@ function showLayer(layer) {
 
 /**
  * We're fetching fire data directly from this ArcGIS server,
- * and coloring it a sort of purple so that it isn't too clashy with the reds.
+ * and coloring it orange to represent the active fires
  */
 const fires = `https://opendata.arcgis.com/datasets/5da472c6d27b4b67970acc7b5044c862_0.geojson?geometry=%7B%22xmin%22%3A-131.309%2C%22ymin%22%3A43.275%2C%22xmax%22%3A-111.622%2C%22ymax%22%3A46.01%2C%22type%22%3A%22extent%22%2C%22spatialReference%22%3A%7B%22wkid%22%3A4326%7D%7D`;
 fetch(fires)
@@ -144,7 +144,7 @@ fetch(fires)
   .then((fires) => {
     L.geoJSON(fires, {
       style: function (_feature) {
-        return { color: "#6f4070" };
+        return { color: "#FF5733" };
       },
     })
       .eachLayer(function (layer) {
