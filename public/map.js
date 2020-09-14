@@ -12,7 +12,7 @@ const bbox = {
 };
 
 L.tileLayer(
-  "https://api.mapbox.com/styles/v1/tmcw/ckezx6w3p029819pns6t0vwao/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidG1jdyIsImEiOiJjazljNTM3Z2IwMWFsM21uc3htNnNnbGkxIn0.x9St0tz_1Tp0BSCIN6jf0g",
+  "https://api.mapbox.com/styles/v1/tmcw/ckezx6w3p029819pns6t0vwao/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoidG1jdyIsImEiOiJja2YzMmRubWcxOXR0MzJwZDFhZXFncmkzIn0.EJ3aRcZt7cn-6gLeOyWnaw",
   {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
